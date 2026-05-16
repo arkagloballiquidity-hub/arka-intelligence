@@ -165,3 +165,69 @@ export async function fetchCloudflareOutages() {
     return [];
   }
 }
+
+// ── NewsAPI — Cyber Threats Feed ─────────────────────────────
+export async function fetchCyberFeed() {
+  if (!KEYS.newsapi) return [];
+  try {
+    const params = new URLSearchParams({
+      q: 'cyber attack OR ransomware OR malware OR APT OR "data breach" OR "zero-day"',
+      language: 'en',
+      pageSize: '8',
+      sortBy: 'publishedAt',
+      apiKey: KEYS.newsapi,
+    });
+    const data = await apiFetch(`https://newsapi.org/v2/everything?${params}`);
+    return (data.articles || []).slice(0, 8).map(a => {
+      const title = (a.title || '').toLowerCase();
+      const sev = (title.includes('critical') || title.includes('zero-day') || title.includes('nation-state') || title.includes('apt'))
+        ? 'critical'
+        : (title.includes('ransomware') || title.includes('breach') || title.includes('exploit') || title.includes('cve'))
+        ? 'high'
+        : 'medium';
+      return {
+        sev,
+        text: a.title || '',
+        src: a.source?.name || '',
+        url: a.url || '',
+      };
+    });
+  } catch {
+    return [];
+  }
+}
+
+// ── GDELT — Military Activity Feed ───────────────────────────
+export async function fetchMilitaryFeed() {
+  try {
+    const params = new URLSearchParams({
+      query: 'military troops navy airforce missile strike theme:MILITARY',
+      mode: 'artlist',
+      maxrecords: '10',
+      format: 'json',
+    });
+    const data = await apiFetch(
+      `https://api.gdeltproject.org/api/v2/doc/doc?${params}`
+    );
+    return (data.articles || []).slice(0, 8).map(a => {
+      const title = (a.title || '').toLowerCase();
+      let tag = 'INT', tagCol = '#A3A3A3', icon = '⚔';
+      if (title.includes('russia') || title.includes('russian') || title.includes('kremlin')) {
+        tag = 'RUS'; tagCol = '#EF4444'; icon = '✈';
+      } else if (title.includes('china') || title.includes('pla') || title.includes('beijing')) {
+        tag = 'CHN'; tagCol = '#EF4444'; icon = '⛵';
+      } else if (title.includes('iran') || title.includes('irgc') || title.includes('tehran')) {
+        tag = 'IRN'; tagCol = '#F59E0B'; icon = '⛵';
+      } else if (title.includes('north korea') || title.includes('dprk') || title.includes('pyongyang')) {
+        tag = 'PRK'; tagCol = '#F59E0B'; icon = '🚀';
+      } else if (title.includes('israel') || title.includes('idf')) {
+        tag = 'ISR'; tagCol = '#3B82F6'; icon = '✈';
+      } else if (title.includes('united states') || title.includes('pentagon') || title.includes('nato') || title.includes(' us ')) {
+        tag = 'USA'; tagCol = '#3B82F6'; icon = '✈';
+      }
+      return { icon, tag, tagCol, text: a.title || '', url: a.url || '' };
+    });
+  } catch {
+    return [];
+  }
+}
