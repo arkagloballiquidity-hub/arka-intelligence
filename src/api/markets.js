@@ -144,3 +144,27 @@ export async function fetchCrypto() {
     return { sym: CRYPTO_SYMS[i].sym2, name: CRYPTO_SYMS[i].name, price: '—', chg: '—', up: true, error: true };
   });
 }
+
+// Obtiene quotes para símbolos personalizados (widget watchlist)
+export async function fetchCustomMarkets(symbols = []) {
+  if (!symbols.length) return [];
+  const results = await Promise.allSettled(
+    symbols.map(async (sym) => {
+      try {
+        const q = await getQuote(sym);
+        const isCrypto = sym.includes(':');
+        const up = (q.change || 0) >= 0;
+        return {
+          _sym: sym,
+          t: sym.split(':').pop().replace('USDT',''),
+          p: fmtPrice(q.price, isCrypto ? 'CRYPTO' : 'STK'),
+          c: `${up ? '+' : ''}${(q.change || 0).toFixed(2)}%`,
+          up,
+        };
+      } catch {
+        return { _sym: sym, t: sym, p: '—', c: '—', up: true, error: true };
+      }
+    })
+  );
+  return results.map(r => r.status === 'fulfilled' ? r.value : { _sym: '', t: '—', p: '—', c: '—', up: true });
+}
