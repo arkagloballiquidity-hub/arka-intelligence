@@ -84,7 +84,7 @@ body{margin:0;font-family:'Montserrat',sans-serif;font-size:13px;overflow:hidden
   .hdr{padding:0 8px}
   .logo-img{height:26px !important}
 }
-.app{display:flex;flex-direction:column;height:100vh;width:100vw;overflow:clip;background:var(--void);color:var(--t1);transition:background .25s,color .25s}
+.app{display:flex;flex-direction:column;height:100vh;width:100vw;overflow:hidden;background:var(--void);color:var(--t1);transition:background .25s,color .25s}
 
 .brk{height:26px;min-height:26px;background:linear-gradient(90deg,rgba(239,68,68,.1),transparent);border-bottom:1px solid rgba(239,68,68,.15);display:flex;align-items:center;overflow:hidden}
 .blbl{font-family:'Montserrat',monospace;font-size:8.5px;font-weight:500;letter-spacing:.18em;color:var(--red);padding:0 10px;height:100%;display:flex;align-items:center;border-right:1px solid rgba(239,68,68,.15);white-space:nowrap;flex-shrink:0;background:rgba(239,68,68,.05)}
@@ -118,7 +118,7 @@ body{margin:0;font-family:'Montserrat',sans-serif;font-size:13px;overflow:hidden
 .hbtn:hover{border-color:var(--blue);color:var(--blue);background:var(--blue-dim)}
 .hbtn.on{border-color:var(--blue);color:var(--blue);background:var(--blue-dim)}
 
-.body{display:flex;flex:1;overflow:clip}
+.body{display:flex;flex:1;min-height:0;overflow:hidden}
 .sidebar{width:40px;min-width:40px;background:var(--base);border-right:1px solid var(--border);display:flex;flex-direction:column;align-items:center;padding:8px 0;gap:2px}
 .nbtn{width:28px;height:28px;display:flex;align-items:center;justify-content:center;border:none;background:transparent;color:var(--t3);cursor:pointer;border-radius:4px;font-size:13px;transition:all .15s;position:relative}
 .nbtn:hover{background:var(--hover);color:var(--t2)}
@@ -571,17 +571,17 @@ const CHANNELS = [
   { id:"trt",       label:"TRT World",  type:"hls",
     src:"https://tv-trtworld.live.trt.com.tr/master.m3u8",
     ytOpen:"https://www.trtworld.com/watch" },
-  // Bloomberg TV — Quicktake live stream (video ID estable)
-  { id:"bloomberg", label:"Bloomberg",  type:"yt",
-    src:"https://www.youtube.com/embed/dp8PhLsUcFE?autoplay=1&mute=1&controls=1&modestbranding=1&rel=0",
+  // Bloomberg TV — HLS Quicktake (fallback: bloomberg.com/live)
+  { id:"bloomberg", label:"Bloomberg",  type:"hls",
+    src:"https://cdn-videos.akamaized.net/btv/desktop/assets/videos/streams/live/btvhd_enc_1/live.m3u8",
     ytOpen:"https://www.bloomberg.com/live" },
   // CNBC — YouTube live
   { id:"cnbc",      label:"CNBC",       type:"yt",
     src:"https://www.youtube.com/embed/live_stream?channel=UCvJJ_dzjViJCoLf5uKUTwoA&autoplay=1&mute=1&controls=1&modestbranding=1&rel=0",
     ytOpen:"https://www.cnbc.com/live-tv/" },
-  // Reuters TV — live stream directo
+  // Reuters TV — YouTube Quicktake
   { id:"reuters",   label:"Reuters",    type:"yt",
-    src:"https://www.youtube.com/embed/QXnkXMGTgkE?autoplay=1&mute=1&controls=1&modestbranding=1&rel=0",
+    src:"https://www.youtube.com/embed/live_stream?channel=UCNye-wNBqNL5ZzHSJdpkDEA&autoplay=1&mute=1&controls=1&modestbranding=1&rel=0",
     ytOpen:"https://www.reuters.com/video/live/" },
 ];
 
