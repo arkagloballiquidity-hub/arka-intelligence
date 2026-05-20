@@ -126,7 +126,7 @@ body{margin:0;font-family:'Montserrat',sans-serif;font-size:13px;overflow:hidden
 .nbtn.active::before{content:'';position:absolute;left:0;top:4px;bottom:4px;width:2px;background:var(--blue);border-radius:0 2px 2px 0}
 .nsp{flex:1}
 
-.workspace{flex:1;overflow-y:auto;overflow-x:hidden;background:var(--void);padding:8px 10px;display:flex;flex-direction:column;gap:8px}
+.workspace{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;background:var(--void);padding:8px 10px;display:flex;flex-direction:column;gap:8px}
 .workspace::-webkit-scrollbar{width:4px}
 .workspace::-webkit-scrollbar-thumb{background:var(--scroll);border-radius:2px}
 .wrow{display:flex;gap:8px;width:100%;flex-shrink:0}
@@ -571,17 +571,17 @@ const CHANNELS = [
   { id:"trt",       label:"TRT World",  type:"hls",
     src:"https://tv-trtworld.live.trt.com.tr/master.m3u8",
     ytOpen:"https://www.trtworld.com/watch" },
-  // Bloomberg TV — YouTube live (canal oficial)
+  // Bloomberg TV — Quicktake live stream (video ID estable)
   { id:"bloomberg", label:"Bloomberg",  type:"yt",
-    src:"https://www.youtube.com/embed/live_stream?channel=UCrM7B7SL_g1edFOnmj-SDKg&autoplay=1&mute=1&controls=1&modestbranding=1&rel=0",
+    src:"https://www.youtube.com/embed/dp8PhLsUcFE?autoplay=1&mute=1&controls=1&modestbranding=1&rel=0",
     ytOpen:"https://www.bloomberg.com/live" },
   // CNBC — YouTube live
   { id:"cnbc",      label:"CNBC",       type:"yt",
     src:"https://www.youtube.com/embed/live_stream?channel=UCvJJ_dzjViJCoLf5uKUTwoA&autoplay=1&mute=1&controls=1&modestbranding=1&rel=0",
     ytOpen:"https://www.cnbc.com/live-tv/" },
-  // Reuters TV — YouTube live
+  // Reuters TV — live stream directo
   { id:"reuters",   label:"Reuters",    type:"yt",
-    src:"https://www.youtube.com/embed/live_stream?channel=UChqUTb7kYRX8-EiaN3XFrSQ&autoplay=1&mute=1&controls=1&modestbranding=1&rel=0",
+    src:"https://www.youtube.com/embed/QXnkXMGTgkE?autoplay=1&mute=1&controls=1&modestbranding=1&rel=0",
     ytOpen:"https://www.reuters.com/video/live/" },
 ];
 

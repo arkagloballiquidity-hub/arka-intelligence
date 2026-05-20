@@ -1,9 +1,8 @@
 // ============================================================
 //  ARKA — Macro API (FRED Federal Reserve)
 // ============================================================
-import { KEYS, apiFetch } from './config.js';
-
-const BASE = 'https://api.stlouisfed.org/fred/series/observations';
+// FRED va por relay — evita CORS y protege el API key en el bundle
+import { relayFetch } from './config.js';
 
 // Series FRED relevantes
 const SERIES = [
@@ -18,7 +17,7 @@ const SERIES = [
     name: 'US CPI YoY',
     sub: 'Consumer Price Index',
     fmt: (v) => `${parseFloat(v).toFixed(2)}%`,
-    transform: 'pc1', // % change from year ago
+    transform: 'pc1',
   },
   {
     id: 'A191RL1Q225SBEA',
@@ -37,15 +36,14 @@ const SERIES = [
 async function fetchSeries(seriesId, transform = null) {
   const params = new URLSearchParams({
     series_id: seriesId,
-    api_key: KEYS.fred,
     file_type: 'json',
     sort_order: 'desc',
-    limit: '13', // 12 meses + current
+    limit: '13',
     observation_end: new Date().toISOString().split('T')[0],
   });
   if (transform) params.set('units', transform);
 
-  const data = await apiFetch(`${BASE}?${params}`);
+  const data = await relayFetch(`/fred?${params}`);
   const obs = (data.observations || []).filter(o => o.value !== '.').reverse();
   return obs.map(o => ({
     date: o.date,
