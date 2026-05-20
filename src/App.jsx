@@ -546,43 +546,20 @@ const intelStore = {
 
 // Canales de noticias — HLS nativos (sin YouTube iframe)
 // Streams oficiales de los canales — sin bot-check, sin cookies
+const YT = (id) => `https://www.youtube.com/embed/${id}?autoplay=1&mute=1&controls=1&modestbranding=1&rel=0`;
+
 const CHANNELS = [
-  // Al Jazeera English — HLS oficial getaj.net
-  { id:"aljazeera", label:"Al Jazeera", type:"hls",
-    src:"https://live-hls-web-aje.getaj.net/AJE/01.m3u8",
-    ytOpen:"https://www.aljazeera.com/live/" },
-  // France 24 — embed oficial propio (más estable que YouTube)
-  { id:"f24",       label:"France 24",  type:"direct",
-    src:"https://static.france24.com/static_n/script/f24_embed/index.html?lang=en&autoplay=true",
-    ytOpen:"https://www.france24.com/en/live-news" },
-  // NHK World — HLS oficial NHK
-  { id:"nhk",       label:"NHK World",  type:"hls",
-    src:"https://cdn.nhkworld.jp/www11/nhkworld-tv/pre/hlscomp.m3u8",
-    ytOpen:"https://www3.nhk.or.jp/nhkworld/en/live/" },
-  // CGTN — HLS oficial
-  { id:"cgtn",      label:"CGTN",       type:"hls",
-    src:"https://news.cgtn.com/resource/live/english/cgtn-news.m3u8",
-    ytOpen:"https://www.cgtn.com/live.html" },
-  // DW News — YouTube (suele funcionar)
-  { id:"dw",        label:"DW News",    type:"yt",
-    src:"https://www.youtube.com/embed/mGbCJbMCYzI?autoplay=1&mute=1&controls=1&modestbranding=1&rel=0",
-    ytOpen:"https://www.youtube.com/watch?v=mGbCJbMCYzI" },
-  // TRT World — HLS oficial
-  { id:"trt",       label:"TRT World",  type:"hls",
-    src:"https://tv-trtworld.live.trt.com.tr/master.m3u8",
-    ytOpen:"https://www.trtworld.com/watch" },
-  // Bloomberg TV — HLS Quicktake (fallback: bloomberg.com/live)
-  { id:"bloomberg", label:"Bloomberg",  type:"hls",
-    src:"https://cdn-videos.akamaized.net/btv/desktop/assets/videos/streams/live/btvhd_enc_1/live.m3u8",
-    ytOpen:"https://www.bloomberg.com/live" },
-  // CNBC — YouTube live
-  { id:"cnbc",      label:"CNBC",       type:"yt",
-    src:"https://www.youtube.com/embed/live_stream?channel=UCvJJ_dzjViJCoLf5uKUTwoA&autoplay=1&mute=1&controls=1&modestbranding=1&rel=0",
-    ytOpen:"https://www.cnbc.com/live-tv/" },
-  // Reuters TV — YouTube Quicktake
-  { id:"reuters",   label:"Reuters",    type:"yt",
-    src:"https://www.youtube.com/embed/live_stream?channel=UCNye-wNBqNL5ZzHSJdpkDEA&autoplay=1&mute=1&controls=1&modestbranding=1&rel=0",
-    ytOpen:"https://www.reuters.com/video/live/" },
+  { id:"aljazeera", label:"Al Jazeera",    type:"yt", src:YT("gCNeDWCI0vo"), ytOpen:"https://www.youtube.com/watch?v=gCNeDWCI0vo" },
+  { id:"f24",       label:"France 24",     type:"yt", src:YT("Ap-UM1O9RBU"), ytOpen:"https://www.youtube.com/watch?v=Ap-UM1O9RBU" },
+  { id:"nhk",       label:"NHK World",     type:"yt", src:YT("f0lYkdA-Gtw"), ytOpen:"https://www.youtube.com/watch?v=f0lYkdA-Gtw" },
+  { id:"cgtn",      label:"CGTN",          type:"yt", src:YT("BOy2xDU1LC8"), ytOpen:"https://www.youtube.com/watch?v=BOy2xDU1LC8" },
+  { id:"dw",        label:"DW News",       type:"yt", src:YT("LuKwFajn37U"), ytOpen:"https://www.youtube.com/watch?v=LuKwFajn37U" },
+  { id:"trt",       label:"TRT World",     type:"yt", src:YT("eIBtiuI1eQ8"), ytOpen:"https://www.youtube.com/watch?v=eIBtiuI1eQ8" },
+  { id:"bloomberg", label:"Bloomberg",     type:"yt", src:YT("iEpJwprxDdk"), ytOpen:"https://www.youtube.com/watch?v=iEpJwprxDdk" },
+  { id:"cnbc",      label:"CNBC",          type:"yt", src:YT("live_stream?channel=UCvJJ_dzjViJCoLf5uKUTwoA"), ytOpen:"https://www.cnbc.com/live-tv/" },
+  { id:"reuters",   label:"Reuters",       type:"yt", src:YT("ZffQ_ZkPC1U"), ytOpen:"https://www.youtube.com/watch?v=ZffQ_ZkPC1U" },
+  { id:"yahoo",     label:"Yahoo Finance", type:"yt", src:YT("KQp-e_XQnDE"), ytOpen:"https://www.youtube.com/watch?v=KQp-e_XQnDE" },
+  { id:"sky",       label:"Sky News",      type:"yt", src:YT("YDvsBbKfLPA"), ytOpen:"https://www.youtube.com/watch?v=YDvsBbKfLPA" },
 ];
 
 /* ── PANEL REGISTRY ─────────────────────────────────────────── */
