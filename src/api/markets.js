@@ -1,8 +1,8 @@
 // ============================================================
 //  ARKA — Markets API
 //  Finnhub → relay /finnhub  (evita CORS + protege API key)
-//  Alpha Vantage → relay /alphavantage  (FX pairs)
-//  Frankfurter → relay /fx  (FX fallback, sin key)
+//  FX pairs → relay /fx (Frankfurter, gratis, sin quota)
+//  Alpha Vantage reservado SOLO para indicadores técnicos en Quant
 // ============================================================
 import { relayFetch } from './config.js';
 
@@ -47,19 +47,19 @@ async function getQuote(symbol) {
   };
 }
 
-// ── Obtiene tipo de cambio FX via Alpha Vantage (relay) ───────
+// ── Obtiene tipo de cambio FX via Frankfurter (relay /fx, sin quota) ─
 async function getFXRate(from, to) {
-  const data = await relayFetch(
-    `/alphavantage?function=CURRENCY_EXCHANGE_RATE&from_currency=${from}&to_currency=${to}`
-  );
-  const info = data?.['Realtime Currency Exchange Rate'];
-  if (!info) throw new Error('No FX data');
-  const rate = parseFloat(info['5. Exchange Rate']);
-  const bid  = parseFloat(info['8. Bid Price']  || info['5. Exchange Rate']);
-  const ask  = parseFloat(info['9. Ask Price']  || info['5. Exchange Rate']);
-  const prev = parseFloat(info['5. Exchange Rate']); // AV free tier no da prev close
-  const chgPct = 0; // AV free CURRENCY_EXCHANGE_RATE no incluye % change
-  return { price: rate, change: chgPct, prev, high: ask, low: bid };
+  const data = await relayFetch('/fx');
+  const base = from.toUpperCase();
+  const quote = to.toUpperCase();
+  let rate = null;
+  if (base === 'EUR' && data.eur?.rates?.[quote])       rate = data.eur.rates[quote];
+  else if (base === 'USD' && data.usd?.rates?.[quote])  rate = data.usd.rates[quote];
+  else if (data.eur?.rates?.[quote] && data.eur?.rates?.[base]) {
+    rate = data.eur.rates[quote] / data.eur.rates[base]; // cross via EUR
+  }
+  if (!rate) throw new Error(`No FX rate for ${from}/${to}`);
+  return { price: rate, change: 0, prev: rate, high: rate, low: rate };
 }
 
 // ── Formatea precio según tipo ────────────────────────────────
