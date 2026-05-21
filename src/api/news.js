@@ -1,9 +1,8 @@
 // ============================================================
 //  ARKA — News API (NewsAPI + Guardian + NYT + GDELT)
-//  NewsAPI y GDELT van por relay (CORS bloqueado en prod).
-//  Guardian y NYT soportan CORS directo desde browser.
+//  Todas las fuentes van por relay — keys nunca en el bundle.
 // ============================================================
-import { KEYS, apiFetch, relayFetch } from './config.js';
+import { relayFetch } from './config.js';
 
 // Formatea tiempo relativo
 function timeAgo(dateStr) {
@@ -42,17 +41,15 @@ async function fromNewsAPI(query, pageSize = 8) {
   }));
 }
 
-// Guardian API — CORS permitido, llamada directa
+// Guardian — via relay
 async function fromGuardian(section, pageSize = 8) {
-  if (!KEYS.guardian) return [];
   const params = new URLSearchParams({
     section,
     'page-size': String(pageSize),
     'show-fields': 'trailText',
     'order-by': 'newest',
-    'api-key': KEYS.guardian,
   });
-  const data = await apiFetch(`https://content.guardianapis.com/search?${params}`);
+  const data = await relayFetch(`/guardian?${params}`);
   return (data.response?.results || []).map(a => ({
     src: 'The Guardian',
     h: a.webTitle,
@@ -62,12 +59,9 @@ async function fromGuardian(section, pageSize = 8) {
   }));
 }
 
-// NYT API — CORS permitido, llamada directa (top stories)
+// NYT — via relay
 async function fromNYT(section = 'world') {
-  if (!KEYS.nyt) return [];
-  const data = await apiFetch(
-    `https://api.nytimes.com/svc/topstories/v2/${section}.json?api-key=${KEYS.nyt}`
-  );
+  const data = await relayFetch(`/nyt?section=${section}`);
   return (data.results || []).slice(0, 8).map(a => ({
     src: 'NYT',
     h: a.title,
