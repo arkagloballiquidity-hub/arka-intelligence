@@ -1,47 +1,15 @@
 // ============================================================
-//  ARKA — AI API (Groq primary, OpenRouter fallback)
+//  ARKA — AI API
+//  Todas las llamadas van por relay /ai (Groq server-side).
+//  Las API keys NO están en el bundle del frontend.
 // ============================================================
-import { KEYS, apiFetch } from './config.js';
+import { relayFetch } from './config.js';
 
-const GROQ_BASE = 'https://api.groq.com/openai/v1/chat/completions';
-const OR_BASE   = 'https://openrouter.ai/api/v1/chat/completions';
-
-async function callGroq(messages, model = 'llama-3.1-8b-instant') {
-  if (!KEYS.groq) throw new Error('No Groq key');
-  return apiFetch(GROQ_BASE, {
+async function llmCall(messages, max_tokens = 500) {
+  return relayFetch('/ai', {
     method: 'POST',
-    headers: {
-      Authorization: `Bearer ${KEYS.groq}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ model, messages, max_tokens: 500, temperature: 0.3 }),
+    body: JSON.stringify({ messages, max_tokens }),
   });
-}
-
-async function callOpenRouter(messages) {
-  if (!KEYS.openrouter) throw new Error('No OpenRouter key');
-  return apiFetch(OR_BASE, {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${KEYS.openrouter}`,
-      'Content-Type': 'application/json',
-      'HTTP-Referer': 'https://arka-intelligence.vercel.app',
-      'X-Title': 'ARKA Intelligence Center',
-    },
-    body: JSON.stringify({
-      model: 'meta-llama/llama-3.1-8b-instruct:free',
-      messages,
-      max_tokens: 500,
-    }),
-  });
-}
-
-async function llmCall(messages) {
-  try {
-    return await callGroq(messages);
-  } catch {
-    return await callOpenRouter(messages);
-  }
 }
 
 // ── AI Insights — analiza headlines recientes ────────────────

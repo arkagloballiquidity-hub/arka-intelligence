@@ -3,7 +3,7 @@
 //  USGS (earthquakes), NASA FIRMS (fires), Polymarket (predictions)
 //  UNHCR (displacement), ReliefWeb (humanitarian)
 // ============================================================
-import { KEYS, RELAY, relayHeaders, apiFetch } from './config.js';
+import { RELAY, relayHeaders, apiFetch, relayFetch } from './config.js';
 
 // ── USGS Earthquakes (sin key) ───────────────────────────────
 export async function fetchEarthquakes(minMag = 4.0, limit = 8) {
@@ -43,12 +43,10 @@ export async function fetchEarthquakes(minMag = 4.0, limit = 8) {
 
 // ── NASA FIRMS — Satellite Fires ─────────────────────────────
 export async function fetchFires() {
-  if (!KEYS.nasaFirms) return [];
-  // FIRMS devuelve CSV — pedimos últimas 24h, world
-  const url = `https://firms.modaps.eosdis.nasa.gov/api/area/csv/${KEYS.nasaFirms}/VIIRS_SNPP_NRT/world/1`;
+  // Via relay — NASA key nunca sale al browser
   try {
-    const res = await fetch(url);
-    const text = await res.text();
+    const data = await relayFetch('/firms');
+    const text = data.csv || '';
     const lines = text.trim().split('\n').slice(1); // skip header
 
     // Agrupa por país/región aproximada via lat/lon
@@ -149,17 +147,9 @@ export async function fetchDisplacement() {
 
 // ── Cloudflare Radar — Internet outages ─────────────────────
 export async function fetchCloudflareOutages() {
-  if (!KEYS.cloudflare) return [];
+  // Via relay — Cloudflare token nunca sale al browser
   try {
-    const data = await apiFetch(
-      'https://api.cloudflare.com/client/v4/radar/netflows/timeseries?aggInterval=1h&dateRange=24h',
-      {
-        headers: {
-          Authorization: `Bearer ${KEYS.cloudflare}`,
-          'Content-Type': 'application/json',
-        },
-      }
-    );
+    const data = await relayFetch('/cloudflare');
     return data.result || [];
   } catch {
     return [];
@@ -168,16 +158,15 @@ export async function fetchCloudflareOutages() {
 
 // ── NewsAPI — Cyber Threats Feed ─────────────────────────────
 export async function fetchCyberFeed() {
-  if (!KEYS.newsapi) return [];
+  // Via relay — NewsAPI key nunca sale al browser
   try {
     const params = new URLSearchParams({
       q: 'cyber attack OR ransomware OR malware OR APT OR "data breach" OR "zero-day"',
       language: 'en',
       pageSize: '8',
       sortBy: 'publishedAt',
-      apiKey: KEYS.newsapi,
     });
-    const data = await apiFetch(`https://newsapi.org/v2/everything?${params}`);
+    const data = await relayFetch(`/newsapi?${params}`);
     return (data.articles || []).slice(0, 8).map(a => {
       const title = (a.title || '').toLowerCase();
       const sev = (title.includes('critical') || title.includes('zero-day') || title.includes('nation-state') || title.includes('apt'))
