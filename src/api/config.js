@@ -7,30 +7,6 @@
 export const RELAY = import.meta.env.VITE_WS_RELAY_URL || '';
 export const RELAY_SECRET = import.meta.env.VITE_RELAY_SECRET || '';
 
-export const KEYS = {
-  finnhub:       import.meta.env.VITE_FINNHUB_API_KEY        || '',
-  fred:          import.meta.env.VITE_FRED_API_KEY            || '',
-  eia:           import.meta.env.VITE_EIA_API_KEY             || '',
-  alphaVantage:  import.meta.env.VITE_ALPHA_VANTAGE_API_KEY   || '',
-  newsapi:       import.meta.env.VITE_NEWSAPI_KEY             || '',
-  guardian:      import.meta.env.VITE_GUARDIAN_API_KEY        || '',
-  nyt:           import.meta.env.VITE_NYT_API_KEY             || '',
-  groq:          import.meta.env.VITE_GROQ_API_KEY            || '',
-  openrouter:    import.meta.env.VITE_OPENROUTER_API_KEY      || '',
-  anthropic:     import.meta.env.VITE_ANTHROPIC_API_KEY       || '',
-  aisstream:     import.meta.env.VITE_AISSTREAM_API_KEY       || '',
-  openskyId:     import.meta.env.VITE_OPENSKY_CLIENT_ID       || '',
-  openskySecret: import.meta.env.VITE_OPENSKY_CLIENT_SECRET   || '',
-  aviationstack: import.meta.env.VITE_AVIATIONSTACK_KEY       || '',
-  nasaFirms:     import.meta.env.VITE_NASA_FIRMS_API_KEY      || '',
-  cloudflare:    import.meta.env.VITE_CLOUDFLARE_API_TOKEN    || '',
-  metaculus:     import.meta.env.VITE_METACULUS_API_KEY       || '',
-  mapbox:        import.meta.env.VITE_MAPBOX_TOKEN            || '',
-  sentry:        import.meta.env.VITE_SENTRY_DSN              || '',
-  hapi:          import.meta.env.VITE_HAPI_APP_IDENTIFIER     || '',
-  broadcastify:  import.meta.env.VITE_BROADCASTIFY_API_KEY    || '',
-};
-
 // TTL de caché en ms para cada categoría
 export const TTL = {
   markets:   30_000,   // 30s
