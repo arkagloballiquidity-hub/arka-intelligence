@@ -189,16 +189,17 @@ export async function fetchCyberFeed() {
 // ── GDELT — Military Activity Feed ───────────────────────────
 export async function fetchMilitaryFeed() {
   try {
+    // Via relay — evita CORS (GDELT no permite llamadas directas desde el browser)
     const params = new URLSearchParams({
       query: 'military troops navy airforce missile strike theme:MILITARY',
       mode: 'artlist',
       maxrecords: '10',
       format: 'json',
     });
-    const data = await apiFetch(
-      `https://api.gdeltproject.org/api/v2/doc/doc?${params}`
-    );
-    return (data.articles || []).slice(0, 8).map(a => {
+    const data = await relayFetch(`/military-feed?${params}`);
+    // El relay devuelve array directo [{title, src, url, time}], no {articles:[...]}
+    const articles = Array.isArray(data) ? data : (data.articles || []);
+    return articles.slice(0, 8).map(a => {
       const title = (a.title || '').toLowerCase();
       let tag = 'INT', tagCol = '#A3A3A3', icon = '⚔';
       if (title.includes('russia') || title.includes('russian') || title.includes('kremlin')) {
