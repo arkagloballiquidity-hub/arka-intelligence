@@ -11,6 +11,9 @@ import { fetchEarthquakes, fetchFires, fetchPredictions, fetchDisplacement, fetc
 import { fetchInsights, fetchDeduction } from "./api/ai.js";
 import { TTL, relayFetch } from "./api/config.js";
 
+// ── HTML escape helper (for innerHTML/Mapbox popup contexts) ─────────
+const _esc = s => String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+
 // ── Global Tension Index hook (Polymarket) ────────────────────────
 function usePizzINT() {
   const [data, setData] = useState(null);
@@ -968,7 +971,7 @@ function MapboxPanel({ fullscreen, onToggleFullscreen }) {
         if (!f.lat || !f.lng) return;
         const plane = `<div style="font-size:9px;color:#60A5FA;transform:rotate(${f.heading||0}deg);line-height:1">✈</div>`;
         addMarker(f.lat, f.lng, plane, '#3B82F6', 12,
-          `<div style="font-family:Montserrat,sans-serif;font-size:11px;padding:4px"><b style="color:#60A5FA">${f.callsign || f.icao}</b><br/><span style="color:#aaa">${f.country}</span><br/><span style="color:#aaa">Alt: </span>${f.alt ? Math.round(f.alt) + 'm' : '—'} | <span style="color:#aaa">Vel: </span>${f.velocity ? Math.round(f.velocity) + 'm/s' : '—'}</div>`);
+          `<div style="font-family:Montserrat,sans-serif;font-size:11px;padding:4px"><b style="color:#60A5FA">${_esc(f.callsign || f.icao)}</b><br/><span style="color:#aaa">${_esc(f.country)}</span><br/><span style="color:#aaa">Alt: </span>${f.alt ? Math.round(f.alt) + 'm' : '—'} | <span style="color:#aaa">Vel: </span>${f.velocity ? Math.round(f.velocity) + 'm/s' : '—'}</div>`);
       });
     }
 
